@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="fa-IR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <script src="~/asset/plugin/jquery/jquery.min.js"></script>
+    <link rel="stylesheet" href="~/asset/plugin/fontawesome-pro-5.7.2/all.css">
+    <link rel="stylesheet" href="~/asset/app/css/style.css">
+    <link rel="stylesheet" href="~/asset/plugin/alertifyjs/alertify.rtl.min.css">
+    <link rel="apple-touch-icon" sizes="57x57" href="~/asset/app/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="~/asset/app/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="~/asset/app/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="~/asset/app/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="~/asset/app/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="~/asset/app/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="~/asset/app/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="~/asset/app/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="~/asset/app/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="~/asset/app/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/asset/app/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="~/asset/app/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/asset/app/favicon/favicon-16x16.png">
+    <link rel="manifest" href="~/asset/app/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="~/asset/app/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <title>@ViewData["Title"]</title>
+    @await RenderSectionAsync("Head", false)
+</head>
+
+<body>
+    <header>
+        <section class="header-register">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h4>حساب کاربری</h4>
+                </div>
+                <div class="col-sm-6">
+                    @if (User.Identity?.IsAuthenticated ?? false)
+                    {
+                        <h5>@User.Identity.GetEmail()</h5>
+                    }
+                    else
+                    {
+                        <h5>شما ثبت نام نکرده اید</h5>
+                    }
+                </div>
+            </div>
+        </section>
+        <nav class="navbar">
+            <div class="nav-segment first">
+                <div class="nav-icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <a href="/" class="nav-brand"></a>
+            </div>
+            <div class="nav-segment" id="nav-content">
+                <ul>
+                    <li><a asp-route="Home.NewsList">اخبار</a></li>
+                    <li><a href="#">تست</a></li>
+                    <li><a href="#">اختصاصی ترنجی</a></li>
+                    <li><a href="#">تبلیغات</a></li>
+                    <li><a href="#">درباره ما</a></li>
+                </ul>
+            </div>
+            <div class="nav-segment left">
+                <ul>
+                    <li><span class="fas fa-search" id="open-navbar-search"></span></li>
+                    <li class="sub-navbar">
+                        <span class="fas fa-user"></span>
+                        <ul class="navbar-register">
+                            @if (User.Identity?.IsAuthenticated ?? false)
+                            {
+                                <li>
+                                    <i class="fas fa-user-alt"></i>
+                                    <a>@User.Identity.Name</a>
+                                </li>
+                                <li>
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <a asp-action="Logout" asp-controller="Auth">خروج</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <i class="fas fa-user-alt"></i>
+                                    <a asp-action="Register" asp-controller="Auth">ثبت نام</a>
+                                </li>
+                                <li>
+                                    <i class="fas fa-user-check"></i>
+                                    <a asp-action="Login" asp-controller="Auth">ورود</a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <form class="navbar-search" method="get" asp-controller="Home" asp-action="Search">
+                <button class="close"><i class="fas fa-times"></i></button>
+                <input type="text" placeholder="جست و جو" name="q">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+        </nav>
+        <nav class="navbar-shortcut">
+            <div class="navbar-shortcut-drawer row space-between-center p-2">
+                <p>میانبر ها</p>
+                <span class="fas fa-bars"></span>
+            </div>
+            <div class="navbar-shortcut-link">
+                <a href="#">ces</a>
+                <a href="#">آیفون 12</a>
+                <a href="#">گلکسی اس 21</a>
+                <a href="#">آپدیت اندروید 11</a>
+                <a href="#">آپدیت ios 14</a>
+                <a href="#">رمز پویا</a>
+            </div>
+        </nav>
+    </header>
+    <article class="p-4">
+        @await RenderSectionAsync("Main", false)
+        <div class="row mt-2 reverse-md">
+            @await Component.InvokeAsync("SidebarAppComponent")
+            @RenderBody()
+        </div>
+    </article>
+    <button class="btn-first-scroll"><i class="fas fa-arrow-alt-up"></i></button>
+    <footer class="main-footer">
+        <p class="title-footer">پل ارتباطی با سازنده سایت</p>
+        <div class="btn-image-group">
+            <span class="btn-image gmail" onclick="gmailDialog()"></span>
+            <span class="btn-image outlook" onclick="outlookDialog()"></span>
+            <span class="btn-image telegram" onclick="telegramDialog()"></span>
+        </div>
+        <p>&#169; این وب سایت یک پروژه دانشجویی است که مطالب و طراحی آن از ترنجی بهره و الهام گرفته شده است.</p>
+        <div class="end-footer">
+            <em>توسعه طراحی توسط محمد کریمی کلات</em>
+        </div>
+    </footer>
+    <script src="~/asset/plugin/alertifyjs/alertify.min.js"></script>
+    <script src="~/asset/app/js/script.js"></script>
+    @await RenderSectionAsync("Scripts", false)
+</body>
+
+</html>

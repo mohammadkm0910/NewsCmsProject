@@ -1,0 +1,59 @@
+@model NewsCmsProject.Models.Dto.SidebarNewsList
+
+@{
+    Layout = null;
+}
+
+<div class="col-md-4 col-3 p-0">
+    <div class="card">
+        <header class="card-header">
+            <h6>از سرار وب</h6>
+            <i class="fas fa-spinner fa-pulse"></i>
+        </header>
+        <div class="card-body">
+            <ul class="text-list">
+                @foreach (var item in Model.ListFromTheWebs) {
+                    <li><a href="@item.Url" target="_blank">@item.Title</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="card">
+        <header class="card-header">
+            <h6>پربحث ترین ها</h6>
+            <i class="fas fa-comment-alt"></i>
+        </header>
+        <div class="card-body">
+            <ul class="card-list">
+                @foreach (var item in Model.MostCommentNews)
+                {
+                    <li>
+                        <a href="~/Home/Show/@item.Id/@item.Title.Replace(' ', '-')">
+                            <img src="~/@item.Image" alt="@item.Title" title="@item.Title">
+                            <p>@item.Title</p>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="card">
+        <header class="card-header">
+            <h6>پربازدیدترن ها</h6>
+            <i class="fas fa-eye"></i>
+        </header>
+        <div class="card-body">
+            <ul class="card-list">
+                @foreach (var item in Model.MostVisitedNews)
+                {
+                    <li>
+                        <a href="~/Home/Show/@item.Id/@item.Title.Replace(' ', '-')">
+                            <img src="~/@item.Image" alt="@item.Title" title="@item.Title">
+                            <p>@item.Title</p>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>

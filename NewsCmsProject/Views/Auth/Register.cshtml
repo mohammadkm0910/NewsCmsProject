@@ -1,0 +1,71 @@
+@model NewsCmsProject.Models.Dto.RequestRegisterUser
+
+@{
+    ViewData["Title"] = "فرم ثبت نام کاربر";
+    Layout = "_AppLayout";
+    bool IsMicrosoftBrowser = Context.IsInternetExplore() || Context.IsMicrosoftEdge();
+}
+<div class="col-md-8 col-9 p-md-2">
+    <form method="post" asp-action="Register" asp-controller="Auth" class="col-7 main-form">
+        <div asp-validation-summary="ModelOnly"></div>
+        <header>
+            <h5>فرم ثبت نام کاربر</h5>
+        </header>
+        <div class="form-group">
+            <label asp-for="Firstname" class="label-text"></label>
+            <input type="text" asp-for="Firstname" class="input-text" placeholder="نام خود را وارد کنید">
+            <span asp-validation-for="Firstname" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Lastname" class="label-text"></label>
+            <input type="text" asp-for="Lastname" class="input-text" placeholder="فامیل خود را وارد کنید">
+            <span asp-validation-for="Lastname" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Email" class="label-text"></label>
+            <input type="email" asp-for="Email" class="input-text" placeholder="ایمیل خود را وارد کنید">
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="form-group password-row">
+            <label asp-for="Password" class="label-text"></label>
+            @if (!IsMicrosoftBrowser)
+            {
+                <span class="password-show fa fa-eye"></span>
+            }
+            <input type="password" asp-for="Password" class="input-text" placeholder="رمز عبور خود را وارد کنید">
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="form-group password-row">
+            <label asp-for="RePassword" class="label-text"></label>
+            @if (!IsMicrosoftBrowser)
+            {
+                <span class="password-show fa fa-eye"></span>
+            }
+            <input type="password" asp-for="RePassword" class="input-text"
+                placeholder="تکرار رمز عبور خود را وارد کنید">
+            <span asp-validation-for="RePassword" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" class="btn btn-success btn-block" value="ثبت نام">
+        </div>
+    </form>
+</div>
+@section Scripts
+{
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    @if(TempData["Object"] != null)
+    {
+    <script>
+        let obj = JSON.parse('@Html.Raw(TempData["Object"])');
+        if (!obj.IsSuccess) {
+            alertify.error(obj.Message);
+            $('#Firstname').val(obj.Data.Firstname);
+            $('#Lastname').val(obj.Data.Lastname);
+            $('#Email').val(obj.Data.Email);
+            $('#Password').val(obj.Data.Password);
+            $('#RePassword').val(obj.Data.RePassword);
+        }
+    </script>
+    }
+}

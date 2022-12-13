@@ -1,0 +1,136 @@
+﻿@model IEnumerable<NewsCmsProject.Models.Dto.Admin.ShowComment>
+
+@{
+    ViewData["Title"] = "مدیریت نظرات سایت";
+    Layout = "_AdminLayout";
+    var keyRows = 1;
+    ViewBag.BaseUrl = "comment-manager";
+}
+
+<div class="col-12">
+    <div class="card-main">
+        <div class="card-header">
+            <h2>لیست نظرات سایت</h2>
+        </div>
+        <div class="card-body">
+            <div class="card-main main-border">
+                <div class="card-header clearfix">
+                    دیدن همه نظر ها
+                    <button class="btn btn-resize btn-success" id="seen-all">بله</button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table-group">
+                    <thead>
+                        <tr>
+                            <th>تعداد</th>
+                            <th>نام کاربری نظر دهنده</th>
+                            <th>کدام خبر</th>
+                            <th>تاریخ ثبت نظر</th>
+                            <th>وضیعیت نظر</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td title="@item.Id">@keyRows</td>
+                                <td>@item.Username</td>
+                                <td>@(item.NewsTitle.Length <= 62 ? item.NewsTitle : item.NewsTitle[..62] + "...")</td>
+                                <td>@item.CreatedAt.ToSolar()</td>
+                                <td id="td-@item.Id">
+                                    <button class="@item.GetStatusClass() status" onclick="switchStatus('@item.Id')">@item.Status</button>
+                                </td>
+                                <td class="single-line">
+                                    <a class="btn btn-icon btn-warning" onclick="editComment('@item.Id', '@keyRows')"><i class="fas fa-edit"></i></a>
+                                    <a href="~/Admin/Show-Comment/@item.Id" class="btn btn-icon btn-info"><i class="fas fa-info"></i></a>
+                                    <a class="btn btn-icon btn-danger" onclick="deleteComment('@item.Id')"><i class="fas fa-trash"></i></a>
+                                </td>
+                            </tr>
+                            ++keyRows;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        $('#seen-all').on('click', function () {
+            hideModalFooter(false);
+            alertify.confirm(
+                "دیدن همه نظرات",
+                "آیا خوانا کردن همه نظرات اطمینان دارید؟",
+                function () {
+                    $.get("/Admin/SeenAllComment", function (data) {
+                        if (!data.isSuccess) {
+                            toastError(data.message, false, false);
+                        } else {
+                            flushMessages(data.message);
+                        }
+                    });
+                },
+                function () {}
+            );
+        });
+        function editComment(id, index) {
+            let status = document.getElementsByClassName("status")[index - 1].innerText;
+            $.get("/Admin/Edit-Comment/" + id, function (result) {
+                if (status === "Unseen") {
+                    hideModalFooter(false);
+                } else {
+                    hideModalFooter(true);
+                }
+                alertify.alert(
+                    "ویرایش نظر",
+                    result
+                );
+            });
+        }
+        function switchStatus(id) {
+            let url = '/Admin/Change-Status-Comment/' + id;
+            let btn = $('#td-' + id + ' button');
+            $.get(url, function (result) {
+                btn.attr('class', result.message + ' status');
+                $("#unseen-label").html(result.data);
+                switch (result.message) {
+                    case "btn btn-resize btn-primary":
+                        btn.html('Seen');
+                        toastSuccess("نظر خوانده شد", true, false);
+                        break;
+                    case "btn btn-resize btn-success":
+                        btn.html('Approved');
+                        toastSuccess("نظر تایید شد", true, false);
+                        break;
+                    case "btn btn-resize btn-warning":
+                        btn.html('Unseen');
+                        toastSuccess("نظر ناخوانا شد", true, false);
+                        break;
+                }
+            });
+        }
+        function deleteComment(id) {
+            hideModalFooter(false);
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.confirm(
+                "حذف نظر",
+                "آیا از حذف این نظر اطمینان دارید؟",
+                function () {
+                    let url = '/Admin/Destroy-Comment';
+                    $.post(url, { 'id': id }).done(function (data) {
+                        if (!data.isSuccess) {
+                            toastError(data.message, false, false);
+                        } else {
+                            flushMessages(data.message);
+                        }
+                    });
+                },
+                function () {}
+            );
+        }
+    </script>
+}

@@ -1,0 +1,35 @@
+﻿@model NewsCmsProject.Models.Entities.FromTheWeb
+
+@{
+    ViewData["Title"] = "جزئیات خبر وارد شده";
+    Layout = "_AdminLayout";
+}
+<div class="col-12">
+    <div class="card-main">
+        <div class="card-header">
+            <h2>جزئیات خبر وارد شده</h2>
+        </div>
+        <div class="card-body">
+            <dl class="dl-horizontal">
+                <dt>@Html.DisplayNameFor(m => m.Title)</dt>
+                <dd>@Model.Title</dd>
+                <dt>@Html.DisplayNameFor(m => m.Url)</dt>
+                <dd>@Model.Url</dd>
+                <dt>@Html.DisplayNameFor(model => model.User)</dt>
+                <dd>@($"{Model.User.Firstname} {Model.User.Lastname}")</dd>
+                <dt>@Html.DisplayNameFor(m => m.CreatedAt)</dt>
+                <dd>@Model.CreatedAt.ToSolar()</dd>
+                <dt>@Html.DisplayNameFor(m => m.UpdatedAt)</dt>
+                <dd>@(Model.UpdatedAt?.ToSolar() ?? "...")</dd>
+            </dl>
+        </div>
+    </div>
+</div>
+<div class="col-12">
+    <div class="card-main mt-1">
+        <div class="card-body row">
+            <a asp-action="Index" class="btn btn-info mr-2">بازگشت</a>
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning mr-2">بروزرسانی</a>
+        </div>
+    </div>
+</div>

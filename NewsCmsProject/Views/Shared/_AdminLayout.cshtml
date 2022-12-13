@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="~/asset/plugin/jquery/jquery.min.js"></script>
+    <link rel="stylesheet" href="~/asset/plugin/alertifyjs/alertify.rtl.min.css">
+    <link rel="stylesheet" href="~/asset/plugin/toastr-2.0.1/toastr.min.css">
+    <link rel="stylesheet" href="~/asset/plugin/fontawesome-pro-5.7.2/all.css">
+    <link rel="stylesheet" href="~/asset/admin/css/style.css">
+    <link rel="apple-touch-icon" sizes="57x57" href="~/asset/admin/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="~/asset/admin/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="~/asset/admin/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="~/asset/admin/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="~/asset/admin/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="~/asset/admin/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="~/asset/admin/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="~/asset/admin/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="~/asset/admin/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="~/asset/admin/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/asset/admin/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="~/asset/admin/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/asset/admin/favicon/favicon-16x16.png">
+    <link rel="manifest" href="~/asset/admin/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="~/asset/admin/favicon/apple-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <title>@ViewData["Title"]</title>
+    @await RenderSectionAsync("Head", false)
+</head>
+
+<body>
+    <nav class="navbar">
+        <ul class="navbar-nav">
+            <li><a id="btn-open-sidebar"><i class="fas fa-bars"></i></a></li>
+            <li><a href="#" class="brand">پنل داشبورد</a></li>
+        </ul>
+        <form class="nav-search" method="get" asp-controller="Admin" asp-action="Search">
+            <div class="container">
+                <span class="close fas fa-times"></span>
+                <input type="hidden" name="url" value="@ViewBag.BaseUrl">
+                <input type="text" placeholder="جست و جو..." name="q">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
+        <ul class="navbar-nav">
+            <li class="search"><a id="btn-open-search"><i class="fas fa-search"></i></a></li>
+            <li><a id="btn-switch-theme"><i class="moon"></i></a>
+            </li>
+            @await Component.InvokeAsync("UnseenCommentCountAdmin")
+            <li class="navbar-dropdown">
+                <a id="btn-open-user"><i class="fas fa-user-alt"></i></a>
+                <ul id="user-content">
+                    @if (User.Identity?.IsAuthenticated ?? false)
+                    {
+                        <li><a><i class="fas fa-user-tie"></i>@User.Identity.GetEmail().Split('@')[0]</a></li>
+                        <li><a asp-action="Logout" asp-controller="Auth"><i class="fas fa-sign-out-alt"></i>خروج</a></li>
+                    }
+                    else
+                    {
+                        <li><a asp-action="Register" asp-controller="Auth"><i class="fas fa-user-tie"></i>ثبت نام کاربر جدید</a></li>
+                        <li><a asp-action="Login" asp-controller="Auth"><i class="fas fa-sign-out-alt"></i>ورود</a></li>
+                    }
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <aside class="sidebar">
+        <ul class="sidebar-list">
+            <li class="@Html.ActivePage("Admin", "Index")">
+                <a asp-action="Index" asp-controller="Admin">
+                    <i class="fas fa-tachometer-alt"></i>
+                    داشبورد
+                </a>
+            </li>
+            <li class="@Context.ActivePage("Admin/News")">
+                <a asp-route="Admin.News">
+                    <i class="fas fa-pager"></i>
+                    لیست خبر ها
+                </a>
+            </li>
+            <li class="@Context.ActivePage("Admin/Groups", true)">
+                <a asp-route="Admin.Groups">
+                    <i class="fas fa-layer-group"></i>
+                    لیست گروه ها
+                </a>
+            </li>
+            <li class="@Context.ActivePage("Admin/ListUsers")">
+                <a asp-action="ListUsers" asp-controller="Admin">
+                    <i class="fas fa-users"></i>
+                    لیست کاربران
+                </a>
+            </li>
+            <li class="@Context.ActivePage("Admin/Comment-Manager", true)">
+                <a asp-route="Admin.CommentManager">
+                    <i class="fas fa-comment-check"></i>
+                    مدیریت نظرات
+                </a>
+            </li>
+            <li class="@Html.ActivePage("AdminFromTheWeb")">
+                <a asp-action="Index" asp-controller="AdminFromTheWeb">
+                    <i class="fas fa-globe"></i>
+                    از سراسر وب
+                </a>
+            </li>
+            <li>
+                <a href="/">
+                    <i class="fas fa-home"></i>
+                    سایت اصلی
+                </a>
+            </li>
+        </ul>
+    </aside>
+    <article class="wrapper">
+        @RenderBody()
+    </article>
+<footer class="footer">
+    <nav>
+        <address>@DateTime.Now.ToSolar()</address>
+    </nav>
+</footer>
+<script src="~/asset/plugin/toastr-2.0.1/toastr.min.js"></script>
+    <script src="~/asset/plugin/alertifyjs/alertify.min.js"></script>
+    <script src="~/asset/admin/js/main.js"></script>
+    @await RenderSectionAsync("Scripts", false)
+</body>
+
+</html>

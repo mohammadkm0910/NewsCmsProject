@@ -1,0 +1,17 @@
+﻿@model NewsCmsProject.Models.Entities.Group
+
+<div class="card-main main-border">
+    <div class="card-header">
+        <h2>جزئیات گروه</h2>
+    </div>
+    <div class="card-body">
+        <dl class="dl-horizontal">
+            <dt>عنوان گروه:</dt>
+            <dd>@Model.Title</dd>
+            <dt>تاریخ ایجاد:</dt>
+            <dd>@Model.CreatedAt.ToSolar()</dd>
+            <dt>تاریخ بروزرسانی:</dt>
+            <dd>@(Model.UpdatedAt?.ToSolar() ?? "...")</dd>
+        </dl>
+    </div>
+</div>

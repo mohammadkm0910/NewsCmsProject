@@ -1,0 +1,157 @@
+﻿@model NewsCmsProject.Models.Dto.App.ShowNews
+
+@{
+    ViewData["Title"] = Model.Title;
+    Layout = "_AppLayout";
+}
+
+@section Main
+{
+    <div class="row">
+        <div class="col-md-6 first-ad">
+            <a href="#">
+                <img src="~/asset/app/image/Mahak.gif" alt="">
+            </a>
+        </div>
+        <div class="col-md-6 first-ad">
+            <a href="#">
+                <img src="~/asset/app/image/Toranji-Ad.gif" alt="">
+            </a>
+        </div>
+    </div>
+    <div class="row card-image-post">
+        <div class="image-box">
+            <img src="~/@Model.Image" alt="@Model.Title">
+        </div>
+        <div class="info-box">
+            <p>
+                <i class="fas fa-user"></i>
+                نوشته: @Model.Username
+            </p>
+            <p>تاریخ انتشار: @Model.CreatedAt.ToSolar()</p>
+            <p>تعداد نظرات: @Model.Comments.Count()</p>
+            <p>
+                <i class="fas fa-list-alt"></i>
+                گروه:@Model.GroupTitle
+            </p>
+        </div>
+        <div class="title-box"><h5>@Model.Title</h5></div>
+    </div>
+}
+
+<div class="col-md-8 col-9 p-0">
+    <div class="card-main-large">
+        <img src="~/@Model.Image" alt="~/@Model.Title">
+        <div class="p-4">
+            @Html.Raw(Model.Body)
+        </div>
+    </div>
+    <div class="card-main-large mt-2 p-0">
+        @if (User?.Identity?.IsAuthenticated ?? false)
+        {
+            <div class="col-12 main-form fix-show-form" id="form-comment">
+                <header>
+                    <h5>فرم ثبت نظر کاربر</h5>
+                </header>
+                <input type="hidden" id="newsId" name="newsId" value="@Model.Id">
+                <div class="form-group">
+                    <label for="comment" class="label-text">نام کاربری</label>
+                    <textarea class="input-text" placeholder="دیدگاه خود را وارد کنید" name="comment" id="comment"></textarea>
+                </div>
+                <div class="form-group checkbox-row">
+                    <label>
+                        قوانین ارسال دیدگاه در سایت را مطالعه کرده ام.
+                        <input type="checkbox" name="accept" id="accept">
+                        <span class="checkbox-mark"></span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <input type="button" class="btn btn-block" id="insert-comment" value="ثبت نظر">
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="col-12 main-form fix-show-form" id="form-comment">
+                <header>
+                    <h5>شما هنوز وارد سایت نشده اید!</h5>
+                </header>
+                <div class="row">
+                    <div class="col-md-6">
+                        <a asp-controller="Auth" asp-action="Register" class="btn btn-success btn-block">ثبت نام</a>
+                    </div>
+                    <div class="col-md-6">
+                        <a asp-controller="Auth" asp-action="Login" class="btn btn-block">ورود</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    @if (Model.Comments.Any())
+    {
+        <div class="card-main-large mt-2 p-0">
+            @foreach (var comment in Model.Comments)
+            {
+                <div class="row comments">
+                    <div class="avatar">
+                        <span class="fas fa-users"></span>
+                    </div>
+                    <div class="comment-info">
+                        <h4>@comment.Username</h4>
+                        <p>@comment.CreatedAt.ToSolar()</p>
+                    </div>
+                    <div class="col-12 text">
+                        <p>@comment.Body</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="card-main-large mt-2 p-0">
+            <div class="comment-no">نظری برای نمایش وجود ندارد</div>
+        </div>
+    }
+</div>
+
+@section Scripts
+{
+    @if (Context.IsInternetExplore())
+    {
+        <script>
+            function autosize(textarea) {
+                $(textarea).height(1);
+                $(textarea).height($(textarea).prop("scrollHeight"));
+            }
+            $(function () {
+                $(document).on("input", "textarea", function () {
+                    autosize(this);
+                });
+                $("textarea").each(function () {
+                    autosize(this);
+                });
+            });
+        </script>
+    }
+    <script>
+        $('#insert-comment').on('click', function () {
+            let data = {
+                newsId: $('#newsId').val(),
+                comment: $('#comment').val(),
+                accept: $('#accept').prop('checked')
+            };
+            $.post('/Home/Comment-Store', data).done(function (response) {
+                if (response.isSuccess) {
+                    alertify.alert('ورود کاربر', response.message, function () {
+                        window.location.reload();
+                    });
+                } else {
+                    alertify.error(response.message);
+                }
+            }).fail(function () {
+                alertify.error('خطای غیرمنتظره ای رخ داد!');
+            });
+        });
+    </script>
+}

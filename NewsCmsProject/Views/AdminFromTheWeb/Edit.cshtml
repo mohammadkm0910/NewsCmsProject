@@ -1,0 +1,42 @@
+﻿@model NewsCmsProject.Models.Entities.FromTheWeb
+
+@{
+    ViewData["Title"] = "ویرایش خبر وارد شده";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="col-12">
+    <div class="card-main">
+        <div class="card-header">
+            <h2>فرم ویرایش خبر وارد شده</h2>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" asp-controller="AdminFromTheWeb">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-horizontal">
+                    <label asp-for="Title"></label>
+                    <div class="editor">
+                        <input asp-for="Title" class="form-control" placeholder="عنوان خبر را وارد کنید">
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-horizontal">
+                    <label asp-for="Url"></label>
+                    <div class="editor">
+                        <input asp-for="Url" class="form-control" placeholder="لینک خبر را وارد کنید">
+                        <span asp-validation-for="Url" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-horizontal mt-3">
+                    <input type="submit" value="ویرایش اطلاعات" class="btn btn-warning offset-form">
+                    <a asp-action="Index" asp-controller="AdminFromTheWeb" class="btn btn-info mr-2">بازگشت</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

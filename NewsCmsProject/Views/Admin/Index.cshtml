@@ -1,0 +1,101 @@
+﻿@model NewsCmsProject.Models.Dto.DashboardAdmin
+
+@{
+    ViewData["Title"] = "مدیریت سایت";
+    Layout = "_AdminLayout";
+    ViewBag.BaseUrl = "news";
+}
+
+@section Head
+{
+    <link href="~/asset/plugin/chartist-js/chartist.min.css" rel="stylesheet" />
+}
+
+<div class="row">
+    <div class="col-3 col-sm-6">
+        <div class="card gradient-mint">
+            <p><i class="fas fa-pager"></i></p>
+            <h3>تعداد اخبار قابل نمایش</h3>
+            <p>@Model.NewsDisplayedCount</p>
+        </div>
+    </div>
+    <div class="col-3 col-sm-6">
+        <div class="card gradient-light-blue-cyan">
+            <p><i class="fas fa-pager"></i></p>
+            <h3>تعداد اخبار</h3>
+            <p>@Model.NewsCount</p>
+        </div>
+    </div>
+    <div class="col-3 col-sm-6">
+        <div class="card gradient-orange-amber">
+            <p><i class="fas fa-layer-group"></i></p>
+            <h3>تعداد نظرات تایید شده</h3>
+            <p>@Model.CommentApprovedCount</p>
+        </div>
+    </div>
+    <div class="col-3 col-sm-6">
+        <div class="card bg-info">
+            <p><i class="fas fa-layer-group"></i></p>
+            <h3>تعداد گروه های خبری</h3>
+            <p>@Model.GroupNewsCount</p>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-6">
+        <div class="card-main">
+            <div class="card-header">
+                <h2>کاربران وب سایت</h2>
+            </div>
+            <div class="card-body row">
+                <div class="col-6">
+                    <div class="card gradient-red-pink">
+                        <p><i class="fas fa-comment-alt"></i></p>
+                        <h3>تعداد نظرات</h3>
+                        <p>@Model.CommentCount</p>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card gradient-mint">
+                        <p><i class="fas fa-user"></i></p>
+                        <h3>تعداد کاربران سایت</h3>
+                        <p>@Model.UserSiteCount</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="card-main">
+            <div class="card-header">
+                <h2>میزان استفاده از مرورگر ها</h2>
+            </div>
+            <div class="card-body">
+                <div class="browser-chart"></div>
+                <div class="list-browser">
+                    <p><span class="bg-success"></span>اپرا</p>
+                    <p><span class="bg-primary"></span>فایرفاکس</p>
+                    <p><span class="bg-danger"></span>کروم</p>
+                    <p><span class="bg-warning"></span>سافاری</p>
+                    <p><span class="bg-info"></span>دیگر</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/asset/plugin/chartist-js/chartist.min.js"></script>
+    <script>
+        new Chartist.Pie(".browser-chart", {
+            series: [10, 30, 37, 18, 3]
+        }, {
+            donut: true,
+            donutWidth: 30,
+            donutSolid: true,
+            startAngle: 270,
+            showLabel: true
+        });
+    </script>
+}

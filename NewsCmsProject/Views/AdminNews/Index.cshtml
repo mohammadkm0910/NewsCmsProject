@@ -1,0 +1,91 @@
+﻿@model IEnumerable<NewsCmsProject.Models.Dto.DetailNews>
+
+@{
+    ViewData["Title"] = "لیست خبر ها";
+    Layout = "_AdminLayout";
+    int keyRows = 1;
+    ViewBag.BaseUrl = "news";
+}
+
+<div class="col-12">
+    <div class="card-main">
+        <div class="card-header clearfix">
+            <h2>لیست خبر ها</h2>
+            <a asp-route="Admin.News.Create" class="btn btn-success">ایجاد خبر جدید</a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive resizable">
+                <table class="table-page">
+                    <thead>
+                        <tr>
+                            <th>تعداد</th>
+                            <th>تصویر</th>
+                            <th>عنوان گروه</th>
+                            <th>عنوان</th>
+                            <th>بازدید</th>
+                            <th>صفحه اصلی</th>
+                            <th>قابل نمایش</th>
+                            <th>نویسنده</th>
+                            <th>تاریخ ایجاد</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td title="@item.Id">@keyRows</td>
+                                <td><img class="img-outline" src="~/@item.Image" alt="@item.Title"></td>
+                                <td>@item.GroupTitle</td>
+                                <td class="title">@item.Title</td>
+                                <td>@item.Visit</td>
+                                <td class="check"><i class="@item.GetMainPageClass()"></i></td>
+                                <td class="eye"><i class="@item.GetStatusClass()"></i></td>
+                                <td>@item.Username</td>
+                                <td>@item.CreatedAt.ToSolar()</td>
+                                <td class="single-line">
+                                    <a href="~/Admin/News/Edit/@item.Id" class="btn btn-icon btn-warning"><i class="fas fa-edit"></i></a>
+                                    <a href="~/Admin/News/Show/@item.Id" class="btn btn-icon btn-info"><i class="fas fa-info"></i></a>
+                                    <a class="btn btn-icon btn-danger" onclick="deleteNews('@item.Id')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            ++keyRows;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        function deleteNews(id) {
+            alertify.confirm(
+                "حذف صفحه",
+                "آیا از حذف این صفحه اطمینان دارید؟",
+                function () {
+                    $.post('/Admin/News/Destroy', { 'id': id }).done(function (data) {
+                        if (data.isSuccess) {
+                            flushMessages(data.message);
+                        } else {
+                            toastError(data.message, false, false);
+                        }
+                    });
+                },
+                function () {
+                    toastError("شما از حذف صفحه منصرف شده اید", false, false);
+                }
+            );
+        }
+    </script>
+    @if (TempData["Message"] != null)
+    {
+        <script>
+            toastSuccess('@Html.Raw(TempData["Message"])', true, false);
+        </script>
+    }
+} 

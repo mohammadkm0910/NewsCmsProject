@@ -1,0 +1,25 @@
+﻿@model NewsCmsProject.Models.Entities.Comment
+    
+<div class="card-main main-border">
+    <div class="card-header">
+        <h2>فرم ویرایش نظر</h2>
+    </div>
+    <div class="card-body">
+        <div>
+            @if (Model != null) {
+            <div class="form-horizontal no-wrap-md">
+                <label for="Body">ویرایش نظر</label>
+                <textarea class="form-control resizable" asp-for="@Model.Body" id="bodyComment" placeholder="نظر خود را وارد کنید"></textarea>
+            </div>
+            <div class="form-horizontal">
+                <input type="button" class="btn btn-success offset-form" value="ذخیره اطلاعات" onclick="onEditComment('@Model.Id')">
+            </div>
+            } else {
+            <div class="form-horizontal no-wrap-md">
+                <label for="disabled">ویرایش نظر</label>
+                <textarea class="form-control" id="disabled" rows="1" disabled>نظر ناخواناست!!</textarea>
+            </div>
+            }
+        </div>
+    </div>
+</div>

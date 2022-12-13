@@ -1,0 +1,65 @@
+﻿@using NewsCmsProject.Models.Entities
+@model IEnumerable<User>
+
+@{
+    ViewData["Title"] = "لیست کاربران سایت";
+    Layout = "_AdminLayout";
+    int keyRow = 1;
+    ViewBag.BaseUrl = "list-user";
+}
+
+<div class="col-12">
+    <div class="card-main">
+        <div class="card-header">
+            <h2>لیست کاربران سایت</h2>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table-group">
+                    <thead>
+                        <tr>
+                            <th>تعداد</th>
+                            <th>نام کاربری</th>
+                            <th>ایمیل کاربر</th>
+                            <th>تاریخ ثبت نام</th>
+                            <th>نوع دسترسی</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            var adminTitle = item.Permission == UserPermission.Admin ? "مدیر سایت" : "کاربر سایت";
+                            var className = item.Permission == UserPermission.Admin ? "btn-danger" : "btn-primary";
+                            var userTitle = item.Permission == UserPermission.Admin ? "کاربر" : "مدیر";
+                            <tr title="@adminTitle">
+                                <td title="@item.Id">@keyRow</td>
+                                <td>@(item.Firstname + " " + item.Lastname)</td>
+                                <td>@item.Email</td>
+                                <td>@item.CreatedAt.ToSolar()</td>
+                                <th>
+                                    <a href="/Admin/ChangeUserPermission/@item.Id" class="btn btn-resize @className">تبدیل به @userTitle</a>
+                                </th>
+                            </tr>
+                            ++keyRow;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    @if (TempData["Object"] != null)
+    {
+        <script>
+            let obj = JSON.parse('@Html.Raw(TempData["Object"])');
+            if (obj['IsSuccess']) {
+                toastSuccess(obj['Message']);
+            } else {
+                toastError(obj['Message']);
+            }
+        </script>
+    }
+}

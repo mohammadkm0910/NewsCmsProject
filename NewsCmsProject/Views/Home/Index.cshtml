@@ -1,0 +1,93 @@
+﻿@model NewsCmsProject.Models.Dto.HomeNews
+
+@{
+    ViewData["Title"] = "صفحه اصلی";
+    Layout = "_AppLayout";
+}
+
+@section Main {
+    <div class="row">
+        <div class="col-md-6 first-ad">
+            <a href="#">
+                <img src="~/asset/app/image/Mahak.gif" alt="">
+            </a>
+        </div>
+        <div class="col-md-6 first-ad">
+            <a href="#">
+                <img src="~/asset/app/image/Toranji-Ad.gif" alt="">
+            </a>
+        </div>
+    </div>
+    @if (Model.ListHomeNews.Count() == 6)
+    {
+        <div class="row mt-2">
+            @for (int i = 0; i < 4; i++)
+            {
+                var mi = Model.ListHomeNews[i];
+                <div class="col-md-6 gallery-large-item">
+                    <a href="~/Home/Show/@mi.Id/@mi.GetUrlTitle()">
+                        <div class="gallery-large-content">
+                            <p>@mi.Title</p>
+                            <p>@mi.Username</p>
+                            <p>
+                                <span>@mi.CountComments</span>
+                                <span class="fas fa-comment"></span>
+                            </p>
+                        </div>
+                        <img src="~/@mi.Image" alt="@mi.Title" class="gallery-large-image">
+                    </a>
+                </div>
+            }
+        </div>
+        <div class="row">
+            @for (int i = 4; i < 6; i++)
+            {
+                var mi = Model.ListHomeNews[i];
+                <a href="~/Home/Show/@mi.Id/@mi.GetUrlTitle()" class="col-md-6 main-item-gradient">
+                    <div class="clip">
+                        <img src="@mi.Image" alt="@mi.Title">
+                        <h6>@mi.Title</h6>
+                    </div>
+                </a>
+            }
+        </div>
+    }
+}
+<div class="col-md-8 col-9 p-0">
+    @foreach (var item in Model.ListNewsCard) {
+    <div class="row card-mini-post">
+        <a href="~/Home/Show/@item.Id/@item.GetUrlTitle()" class="shine">
+            <img src="~/@item.Image" alt="@item.Title">
+        </a>
+        <div>
+            <a href="~/Home/Group/@item.GroupId/@item.GroupTitle" class="group">
+                @item.GroupTitle
+            </a>
+            <a href="~/Home/Show/@item.Id/@item.GetUrlTitle()" class="title"><h6>@item.Title</h6></a>
+            <p class="info">
+                <span>نام نویسنده: </span>
+                <span>@item.Username</span>
+                <span> | </span>
+                <span>@item.CreatedAt.GetTimeAgo()</span>
+                <span> | </span>
+                <span>تعداد دیدگاه: </span>
+                <span>@item.CountComments دیدگاه</span>
+            </p>
+            <p class="content">@item.Summary</p>
+        </div>
+    </div>
+    }
+    <ul class="paging">
+        @for (int i = 1; i <= Model.PageCount; i++)
+        {
+        <li class="@(Model.CurrentPage == i ? "active" : "")">
+            <a href="~/Home?page=@i">@i</a>
+        </li>
+        }
+    </ul>
+</div>
+@section Scripts
+{
+    <script src="~/asset/plugin/vibrant.js-master/Vibrant.min.js"></script>
+    <script src="~/asset/app/js/vibrant.js"></script>
+}

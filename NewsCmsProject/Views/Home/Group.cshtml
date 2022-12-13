@@ -1,0 +1,45 @@
+﻿@model NewsCmsProject.Models.Dto.ListNews
+
+@{
+    ViewData["Title"] = $"گروه {Model.Title}";
+    Layout = "_AppLayout";
+}
+
+@section Main
+{
+    <div class="card-group">
+        <h1><q>@Model.Title</q></h1>
+    </div>
+}
+
+<div class="col-md-8 col-9 p-0">
+    @foreach (var item in Model.ListNewsCard)
+    {
+        <div class="row card-mini-post">
+            <a href="~/Home/Show/@item.Id/@item.GetUrlTitle()" class="shine">
+                <img src="~/@item.Image" alt="@item.Title">
+            </a>
+            <div>
+                <a href="~/Home/Group/@item.GroupId/@Model.Title" class="title"><h6>@Model.Title</h6></a>
+                <p class="info">
+                    <span>نام نویسنده: </span>
+                    <span>@item.Username</span>
+                    <span> | </span>
+                    <span>@item.CreatedAt.GetTimeAgo()</span>
+                    <span> | </span>
+                    <span>تعداد دیدگاه: </span>
+                    <span>@item.CountComments دیدگاه</span>
+                </p>
+                <p class="content">@item.Summary</p>
+            </div>
+        </div>
+    }
+    <ul class="paging">
+        @for (int i = 1; i <= Model.PageCount; i++)
+        {
+            <li class="@(Model.CurrentPage == i ? "active" : "")">
+                <a href="~/Home/Group/@Model.Id/@Model.Title?page=@i">@i</a>
+            </li>
+        }
+    </ul>
+</div>

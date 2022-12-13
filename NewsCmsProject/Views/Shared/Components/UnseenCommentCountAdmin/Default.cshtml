@@ -1,0 +1,10 @@
+@model int
+
+@{
+    Layout = null;
+}
+
+<li class="navigation">
+    <a><i class="fas fa-bell"></i></a>
+    <span id="unseen-label">@Model.ToString()</span>
+</li>

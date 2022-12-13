@@ -1,0 +1,74 @@
+﻿@model NewsCmsProject.Models.Dto.DetailNews
+
+@{
+    ViewData["Title"] = "جزئیات خبر";
+    Layout = "_AdminLayout";
+    ViewBag.BaseUrl = "news";
+}
+
+@section Head
+{
+    <style>
+        .cke_inner .cke_top .cke_toolbox {
+            display: none;
+        }
+    </style>
+}
+<div class="col-12">
+    <div class="card-main">
+        <div class="card-header">
+            <h2>جزیئات صفحه</h2>
+        </div>
+        <div class="card-body">
+            <dl class="dl-horizontal">
+                <dt>عنوان گروه:</dt>
+                <dd>@Model.GroupTitle</dd>
+                <dt>عنوان خبر:</dt>
+                <dd>@Model.Title</dd>
+                <dt>توضیح مختصر خبر:</dt>
+                <dd class="text-justify">@Model.Summary</dd>
+                <dt><label for="Body">توضیح خبر</label></dt>
+                <dd>
+                    <textarea name="Body" id="Body">@Html.Raw(Model.Body)</textarea>
+                </dd>
+                <dt>تصویر:</dt>
+                <dd>
+                    <img src="~/@Model.Image" alt="@Model.Title" class="img-shadow">
+                </dd>
+                <dt>بازدید:</dt>
+                <dd>@Model.Visit</dd>
+                <dt>اسلایدر:</dt>
+                <dd class="check"><i class="@Model.GetMainPageClass()"></i></dd>
+                <dt>قابل نمایش:</dt>
+                <dd class="eye"><i class="@Model.GetStatusClass()"></i></dd>
+                <dt>تاریخ ایجاد خبر:</dt>
+                <dd>@Model.CreatedAt.ToSolar()</dd>
+                <dt>تاریخ ویرایش خبر:</dt>
+                <dd>@(Model.UpdatedAt?.ToSolar() ?? "...")</dd>
+                <dt>میانبر خبر:</dt>
+                <dd>@(Model.Shortcut ?? "...")</dd>
+                <dt>نویسنده خبر:</dt>
+                <dd>@Model.Username</dd>
+            </dl>
+        </div>
+    </div>
+</div>
+<div class="col-12">
+    <div class="card-main mt-1">
+        <div class="card-body row">
+            <a asp-route="Admin.News" class="btn btn-info mr-2">بازگشت</a>
+            <a href="~/Admin/News/Edit/@Model.Id" class="btn btn-warning mr-2">بروزرسانی</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/asset/plugin/ckeditor/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace("Body", {
+            language: "fa",
+            readOnly: true,
+        });
+    </script>
+}

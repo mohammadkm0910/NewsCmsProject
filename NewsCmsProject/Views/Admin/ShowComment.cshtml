@@ -1,0 +1,59 @@
+﻿@model NewsCmsProject.Models.Dto.Admin.ShowComment
+
+@{
+    ViewData["Title"] = "نمایش نظر";
+    Layout = "_AdminLayout";
+    ViewBag.BaseUrl = "comment-manager";
+}
+
+<div class="col-12">
+    <div class="card-main">
+        <div class="card-header">
+            <h2>جزیئات نظر</h2>
+        </div>
+        <div class="card-body">
+            <dl class="dl-horizontal">
+                <dt>کاربری نظر دهنده:</dt>
+                <dd>@Model.Username</dd>
+                <dt>کدام خبر:</dt>
+                <dd>@Model.NewsTitle</dd>
+                <dt>وضعیت نظر:</dt>
+                <dd id="dd-status">@Model.Status</dd>
+                <dt>متن نظر:</dt>
+                <dd class="text-justify">@(Model.IsUnseen() ? "خبر ناخوانا است!!" : Model.Body)</dd>
+                <dt>تاریخ ثبت نظر:</dt>
+                <dd>@Model.CreatedAt.ToSolar()</dd>
+                <dt>تاریخ ویرایش نظر:</dt>
+                <dd>@(Model.UpdatedAt?.ToSolar() ?? "...")</dd>
+            </dl>
+        </div>
+    </div>
+</div>
+<div class="col-12">
+    <div class="card-main mt-1">
+        <div class="card-body row">
+            <a asp-route="Admin.CommentManager" class="btn btn-info mr-2">بازگشت</a>
+            <a class="btn btn-warning mr-2" onclick="editComment('@Model.Id')">بروزرسانی</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+<script>
+    function editComment(id) {
+        let status = $('#dd-status').text();
+        $.get("/Admin/Edit-Comment/" + id, function (result) {
+            if (status === "Unseen") {
+                hideModalFooter(false);
+            } else {
+                hideModalFooter(true);
+            }
+            alertify.alert(
+                "ویرایش نظر",
+                result
+            );
+        });
+    }
+</script>
+}

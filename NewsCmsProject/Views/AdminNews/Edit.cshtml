@@ -1,0 +1,106 @@
+﻿@using NewsCmsProject.Models.Entities
+@model NewsCmsProject.Models.Dto.RequestAddNews
+
+@{
+    ViewData["Title"] = "ویرایش خبر";
+    Layout = "_AdminLayout";
+    ViewBag.BaseUrl = "news";
+}
+
+<div class="col-12">
+    <div class="card-main">
+        <div class="card-header">
+            <h2>فرم ویرایش خبر</h2>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" asp-controller="AdminNews" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly"></div>
+                <div class="form-horizontal selectBox">
+                    <label asp-for="GroupId"></label>
+                    <select class="form-control" asp-for="GroupId" asp-items="ViewBag.Groups"></select>
+                </div>
+                <div class="form-horizontal no-wrap-md">
+                    <label asp-for="Title"></label>
+                    <div class="editor">
+                        <input type="text" asp-for="Title" class="form-control" placeholder="عنوان خبر را وارد کنید">
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-horizontal no-wrap-md">
+                    <label asp-for="Summary"></label>
+                    <div class="editor">
+                        <textarea class="form-control resizable" asp-for="Summary" placeholder="توضیح مختصر خبر را وارد کنید"></textarea>
+                        <span asp-validation-for="Summary" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-horizontal">
+                    <label asp-for="Body"></label>
+                    <div class="editor">
+                        <textarea class="form-control" asp-for="Body" placeholder="توضیح خبر را وارد کنید"></textarea>
+                        <span asp-validation-for="Body" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-horizontal">
+                    <label asp-for="Image"></label>
+                    <input type="file" asp-for="Image" class="form-control" accept="Image/*">
+                    @if (Model.ImageName != null)
+                    {
+                        <img class="img-outline offset-form" src="~/@Model.ImageName" alt="@Model.Title">
+                    }
+                </div>
+                <div class="form-horizontal no-wrap-md">
+                    <label asp-for="Shortcut"></label>
+                    <div class="editor">
+                        <input type="text" class="form-control" asp-for="Shortcut" placeholder="میانبر خبر را وارد کنید">
+                    </div>
+                </div>
+                <div class="form-horizontal selectBox">
+                    <label for="status">وضعیت</label>
+                    <select asp-for="Status" class="form-control" asp-items="@Html.GetEnumSelectList<NewsStatus>()"></select>
+                </div>
+                <div class="form-horizontal">
+                    <label asp-for="IsMainPage"></label>
+                    <label class="switch">
+                        <input type="checkbox" asp-for="IsMainPage">
+                        <span class="check-mark"></span>
+                    </label>
+                </div>
+                <div class="form-horizontal">
+                    <input type="submit" class="btn btn-success offset-form" value="ذخیره اطلاعات">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="col-12">
+    <div class="card-main mt-1">
+        <div class="card-body row">
+            <a asp-route="Admin.News" class="btn btn-info mr-2">بازگشت</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/asset/plugin/resize/resize-textarea.js"></script>
+    <script src="~/asset/plugin/ckeditor/ckeditor.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        CKEDITOR.replace("Body", {
+            height: "150px",
+            language: "fa",
+            extraPlugins: "editorplaceholder",
+            editorplaceholder: $("#Body").attr("placeholder")
+        });
+        $("#GroupId").val("@Model.GroupId").change();
+        const summery = document.getElementById("Summary");
+        summery.style.height = (summery.scrollHeight + 8) + "px";
+    </script>
+    @if (TempData["Message"] != null)
+    {
+        <script>
+            toastError('@Html.Raw(TempData["Message"])');
+        </script>
+    }
+}

@@ -1,0 +1,106 @@
+﻿@model IEnumerable<NewsCmsProject.Models.Entities.Group>
+
+@{
+    ViewData["Title"] = "گروه های خبری";
+    Layout = "_AdminLayout";
+    var rowsKey = 1;
+    ViewBag.BaseUrl = "groups";
+}
+
+<div class="card-main">
+    <div class="card-header clearfix">
+        <h2>لیست گروه های خبری</h2>
+        <button onclick="createGroup()" class="btn btn-success">ایجاد گروه جدید</button>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table-group">
+                <thead>
+                    <tr>
+                        <th>تعداد</th>
+                        <th>عنوان</th>
+                        <th>تاریخ ایجاد</th>
+                        <th>تاریخ بروزرسانی</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td title="@item.Id">@rowsKey</td>
+                            <td>@item.Title</td>
+                            <td>@item.CreatedAt.ToSolar()</td>
+                            <td>@(item.UpdatedAt?.ToSolar() ?? "...")</td>
+                            <td class="single-line">
+                                <a class="btn btn-warning btn-icon" onclick="editGroup('@item.Id')"><i class="fas fa-edit"></i></a>
+                                <a class="btn btn-info btn-icon" onclick="openShowGroup('@item.Id')"><i class="fas fa-info"></i></a>
+                                <a class="btn btn-danger btn-icon" onclick="deleteGroup('@item.Id')"><i class="fas fa-trash"></i></a>
+                            </td>
+                        </tr>
+                        ++rowsKey;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        function createGroup() {
+            let url = '/Admin/Groups/Create';
+            $.get(url, function (result) {
+                alertify.confirm(
+                    "ایجاد گروه جدید",
+                    result,
+                    function () {
+                    },
+                    function () {
+                    }
+                ).set('basic', true);
+            });
+        }
+        function editGroup(id) {
+            let url = '/Admin/Groups/Edit/' + id;
+            $.get(url, function (result) {
+                alertify.confirm(
+                    "ویرایش گروه",
+                    result,
+                    function () {
+                    },
+                    function () {
+                    }
+                ).set('basic', true);
+            });
+        }
+        function openShowGroup(id) {
+            let url = '/Admin/Groups/Show/' + id;
+            $.get(url, function (result) {
+                alertify.alert(
+                    "ویرایش گروه",
+                    result
+                );
+            });
+        }
+        function deleteGroup(id) {
+            alertify.confirm(
+                "حذف گروه",
+                "آیا از حذف این گروه اطمینان دارید؟",
+                function () {
+                    $.post('/Admin/Groups/Destroy', { id: id }).done(function (result) {
+                        if (!result.isSuccess) {
+                            toastError(result.message, false, false);
+                        } else {
+                            flushMessages(result.message);
+                        }
+                    });
+                },
+                function () {
+                    toastError("شما از حذف گروه منصرف شده اید");
+                }
+            ).set('basic', false);
+        }
+    </script>
+}

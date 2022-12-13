@@ -1,0 +1,19 @@
+﻿@model NewsCmsProject.Models.Entities.Group
+
+<div class="card-main main-border">
+    <div class="card-header">
+        <h2>فرم ویرایش گروه</h2>
+    </div>
+    <div class="card-body">
+        <section>
+            <div class="form-horizontal">
+                <label for="title">عنوان گروه</label>
+                <input type="text" class="form-control" id="title" name="title" value="@Model.Title" placeholder="عنوان گروه را وارد کنید">
+            </div>
+            <div class="form-horizontal main-border">
+                <a class="btn btn-success offset-form" onclick="onEditGroup('@Model.Id')">ذخیره اطلاعات</a>
+                <a class="btn btn-info mr-2" onclick="onCloseAlertify()">بازگشت</a>
+            </div>
+        </section>
+    </div>
+</div>

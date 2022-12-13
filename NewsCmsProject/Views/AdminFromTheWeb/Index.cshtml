@@ -1,0 +1,77 @@
+﻿@model IEnumerable<NewsCmsProject.Models.Entities.FromTheWeb>
+
+@{
+    ViewData["Title"] = "لیست خبر های وارد شده";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var keyRows = 1;
+}
+<div class="card-main">
+    <div class="card-header clearfix">
+        <h2>خبر های وارد شده</h2>
+        <a asp-action="Create" asp-controller="AdminFromTheWeb" class="btn btn-success">ایجاد خبر جدید</a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table-group">
+                <thead>
+                <tr>
+                    <th>تعداد</th>
+                    <th>@Html.DisplayNameFor(m => m.Title)</th>
+                    <th>@Html.DisplayNameFor(m => m.Url)</th>
+                    <th>@Html.DisplayNameFor(m => m.User)</th>
+                    <th>@Html.DisplayNameFor(m => m.CreatedAt)</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model) {
+                    <tr>
+                        <td title="@item.Id">@keyRows</td>
+                        <td>@item.Title</td>
+                        <td>@item.Url</td>
+                        <td>@($"{item.User.Firstname} {item.User.Lastname}")</td>
+                        <td>@item.CreatedAt.ToSolar()</td>
+                        <td class="single-line">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-icon btn-warning">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a asp-action="Show" asp-route-id="@item.Id" class="btn btn-info btn-icon">
+                                <i class="fas fa-info"></i>
+                            </a>
+                            <a class="btn btn-danger btn-icon" onclick="deleteFromTheWeb('@item.Id')">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    ++keyRows;
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        function deleteFromTheWeb(id) {
+            alertify.confirm(
+                "حذف خبر",
+                "آیا از حذف این خبر اطمینان دارید؟",
+                function () {
+                    $.post("/Admin/FromTheWeb/Destroy", { id: id }).done(function (result) {
+                        if (!result['isSuccess']) {
+                            toastError(result.message, false, false);
+                        } else {
+                            flushMessages(result.message);
+                        }
+                    });
+                },
+                function () {
+                    toastError("شما از حذف گروه منصرف شده اید");
+                }
+            ).set("basic", false);
+        }
+    </script>
+
+}
